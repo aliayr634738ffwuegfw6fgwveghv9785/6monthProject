@@ -11,7 +11,7 @@ import com.example.a6monthproject.model.PlayList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 
-class Repository(private val apiService: ApiService, private val data: AppDataBase) {
+class Repository(private val apiService: ApiService, private val db: AppDataBase) {
 
     fun getPlaylist(maxResult: Int): LiveData<Resource<PlayList>> = liveData(Dispatchers.IO) {
         emit(Resource.loading())
@@ -59,7 +59,7 @@ class Repository(private val apiService: ApiService, private val data: AppDataBa
         liveData(Dispatchers.IO) {
             emit(Resource.loading())
             if (playlist != null) {
-                data.dao().insert(playlist)
+                db.dao().insert(playlist)
                 emit(Resource.success(true))
             } else {
                 emit(Resource.error("Data is null"))
@@ -70,7 +70,7 @@ class Repository(private val apiService: ApiService, private val data: AppDataBa
     fun getPlaylistDB(): LiveData<Resource<PlayList>> =
         liveData(Dispatchers.IO) {
             emit(Resource.loading())
-            val result = data.dao().getPlaylistFromDao()
+            val result = db.dao().getPlaylistFromDao()
 
             emit(Resource.success(result))
 
